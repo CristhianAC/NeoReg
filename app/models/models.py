@@ -4,7 +4,7 @@ from enum import Enum as PyEnum
 
 Base = declarative_base()
 
-# Enums para PostgreSQL (deben coincidir con los de Pydantic)
+
 class GeneroDB(PyEnum):
     MASCULINO = "Masculino"
     FEMENINO = "Femenino"

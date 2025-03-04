@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr, field_validator
 from datetime import date
 from typing import Optional
 from .models import GeneroDB, TipoDocumentoDB, PersonalDataDB  # Ajusta importaciones
-from generoEnum import Genero
+from app.models.generoEnum import Genero
 
 class PersonalData(BaseModel):
     primer_nombre: str

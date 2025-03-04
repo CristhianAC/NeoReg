@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.endpoints import user, uploadPhoto # Importar los routers
+from app.api.endpoints import user, uploadPhoto # Importar los routers
 
 app = FastAPI(
     title="NeoReg API",
