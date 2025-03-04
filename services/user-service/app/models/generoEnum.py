@@ -1,8 +1,7 @@
 from enum import Enum
 
-
 class Genero(str, Enum):
-    masculino = "Masculino"
-    femenino = "Femenino"
-    no_binario = "No binario"
-    prefiero_no_reportar = "Prefiero no reportar"
+    MASCULINO = "MASCULINO"
+    FEMENINO = "FEMENINO"
+    NO_BINARIO = "NO_BINARIO"
+    PREFIERO_NO_REPORTAR = "PREFIERO_NO_REPORTAR"

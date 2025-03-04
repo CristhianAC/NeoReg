@@ -1,8 +1,8 @@
-"""Initial migration
+"""initial_migration
 
-Revision ID: 8eb11c7fe591
+Revision ID: b95945a1d0a5
 Revises: 
-Create Date: 2025-03-03 21:58:49.763786
+Create Date: 2025-03-03 23:33:29.384129
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8eb11c7fe591'
+revision: str = 'b95945a1d0a5'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,13 +24,13 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('primer_nombre', sa.String(length=30), nullable=False),
     sa.Column('segundo_nombre', sa.String(length=30), nullable=True),
-    sa.Column('apellidos', sa.String(length=60), nullable=False),
+    sa.Column('apellidos', sa.String(length=50), nullable=False),
     sa.Column('fecha_nacimiento', sa.Date(), nullable=False),
-    sa.Column('genero', sa.Enum('MASCULINO', 'FEMENINO', 'NO_BINARIO', 'PREFIERO_NO_REPORTAR', name='generodb'), nullable=False),
-    sa.Column('correo', sa.String(length=255), nullable=False),
+    sa.Column('genero', sa.Enum('MASCULINO', 'FEMENINO', 'NO_BINARIO', 'PREFIERO_NO_REPORTAR', name='genero_enum'), nullable=False),
+    sa.Column('correo', sa.String(), nullable=False),
     sa.Column('celular', sa.String(length=10), nullable=False),
-    sa.Column('nro_documento', sa.String(length=10), nullable=False),
-    sa.Column('tipo_documento', sa.Enum('TARJETA_IDENTIDAD', 'CEDULA', name='tipodocumentodb'), nullable=False),
+    sa.Column('nro_documento', sa.String(), nullable=False),
+    sa.Column('tipo_documento', sa.Enum('TARJETA_IDENTIDAD', 'CEDULA', name='tipo_documento_enum'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('correo'),
     sa.UniqueConstraint('nro_documento')

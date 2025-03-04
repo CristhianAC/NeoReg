@@ -4,24 +4,27 @@ from sqlalchemy import pool
 from alembic import context
 import os
 import sys
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
+
+# Add the parent directory to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.models.models import Base
 from app.core.config import settings
 
-
+# Alembic Config object
 config = context.config
 
+# Override sqlalchemy.url with environment variable
+config.set_main_option("sqlalchemy.url", settings.sync_database_url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# This is the key line that was missing - add metadata from your models
 target_metadata = Base.metadata
-
-def get_url():
-    return settings.sync_database_url
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -35,7 +38,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = get_url()
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -54,7 +57,7 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = get_url()
+    configuration["sqlalchemy.url"] = config.get_main_option("sqlalchemy.url")
     
     connectable = engine_from_config(
         configuration,

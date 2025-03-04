@@ -1,35 +1,31 @@
 from sqlalchemy import Column, Integer, String, Date, Enum, Index
-from sqlalchemy.ext.declarative import declarative_base
+from app.core.database import Base
 from enum import Enum as PyEnum
 
-Base = declarative_base()
+class GeneroDB(str, PyEnum):
+    MASCULINO = "MASCULINO"
+    FEMENINO = "FEMENINO"
+    NO_BINARIO = "NO_BINARIO"
+    PREFIERO_NO_REPORTAR = "PREFIERO_NO_REPORTAR"
 
-
-class GeneroDB(PyEnum):
-    MASCULINO = "Masculino"
-    FEMENINO = "Femenino"
-    NO_BINARIO = "No binario"
-    PREFIERO_NO_REPORTAR = "Prefiero no reportar"
-
-class TipoDocumentoDB(PyEnum):
-    TARJETA_IDENTIDAD = "Tarjeta de identidad"
-    CEDULA = "Cédula"
+class TipoDocumentoDB(str, PyEnum):
+    TARJETA_IDENTIDAD = "TARJETA_DE_IDENTIDAD"
+    CEDULA = "CEDULA"
 
 class PersonalDataDB(Base):
     __tablename__ = "personas"
 
     id = Column(Integer, primary_key=True, index=True)
     primer_nombre = Column(String(30), nullable=False)
-    segundo_nombre = Column(String(30), nullable=True)  # Opcional
-    apellidos = Column(String(60), nullable=False)
+    segundo_nombre = Column(String(30))
+    apellidos = Column(String(50), nullable=False)
     fecha_nacimiento = Column(Date, nullable=False)
-    genero = Column(Enum(GeneroDB), nullable=False)
-    correo = Column(String(255), unique=True, nullable=False)  # Email único
+    genero = Column(Enum(GeneroDB, name='genero_enum'), nullable=False)
+    correo = Column(String, unique=True, nullable=False)
     celular = Column(String(10), nullable=False)
-    nro_documento = Column(String(10), unique=True, nullable=False)
-    tipo_documento = Column(Enum(TipoDocumentoDB), nullable=False)
+    nro_documento = Column(String, unique=True, nullable=False)
+    tipo_documento = Column(Enum(TipoDocumentoDB, name='tipo_documento_enum'), nullable=False)
 
-    # Índices para búsquedas rápidas
     __table_args__ = (
         Index("idx_correo", "correo"),
         Index("idx_nro_documento", "nro_documento"),
