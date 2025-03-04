@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from app.services.user_service import get_all_users
-from openai import OpenAI
+from google import genai
 from app.core.config import settings
 
 router = APIRouter()
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+client = genai.Client(api_key=settings.GOOGLE_API_KEY)
+
+
 
 async def process_natural_language_query(query: str, user_data: list) -> str:
     try:
@@ -14,17 +16,20 @@ async def process_natural_language_query(query: str, user_data: list) -> str:
         Aquí están los datos de los empleados: {user_data}
         
         Pregunta: {query}
+        
+        Responde en español y de forma concisa.
         """
 
-        response = client.chat.completions.create(
-            model=settings.MODEL_NAME,
-            messages=[
-                {"role": "system", "content": "Eres un asistente experto en analizar datos de empleados."},
-                {"role": "user", "content": context}
-            ]
-        )
+        response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents=context,
+)
         
-        return response.choices[0].message.content
+        if response.text:
+            return response.text
+        else:
+            raise HTTPException(status_code=500, detail="No se generó respuesta")
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
 

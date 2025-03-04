@@ -23,6 +23,7 @@ async def create_persona(persona: PersonalData, db: Session = Depends(get_db)):
     
     try:
         db.add(db_persona)
+        print("Persona added")
         db.commit()
         db.refresh(db_persona)
         return db_persona
