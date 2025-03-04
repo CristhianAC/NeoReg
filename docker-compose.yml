@@ -24,6 +24,7 @@ services:
       - "8001:8000"
     depends_on:
       - user-service
+      - vector-db
     environment:
       - USER_SERVICE_URL=http://user-service:8000
       - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -47,6 +48,11 @@ services:
 
   vector-db:
     image: qdrant/qdrant
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - "6333:6333"
     volumes:
