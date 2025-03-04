@@ -53,3 +53,18 @@ class PersonalData(BaseModel):
         if not v.isdigit() or len(v) != 10:
             raise ValueError("Celular debe tener 10 dígitos")
         return v
+
+class PersonalDataResponse(BaseModel):
+    id: int
+    primer_nombre: str
+    segundo_nombre: str | None
+    apellidos: str
+    fecha_nacimiento: date
+    genero: GeneroDB
+    correo: EmailStr
+    celular: str
+    nro_documento: str
+    tipo_documento: TipoDocumentoDB
+
+    class Config:
+        from_attributes = True
