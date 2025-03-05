@@ -2,14 +2,13 @@ from pydantic_settings import BaseSettings
 from typing import Optional
 
 class Settings(BaseSettings):
-    # Database settings
+    
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "1234"
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: str = "5432"
     POSTGRES_DB: str = "diseno"
-    
-    # SQLAlchemy connection string
+
     DATABASE_URL: Optional[str] = None
 
     @property
