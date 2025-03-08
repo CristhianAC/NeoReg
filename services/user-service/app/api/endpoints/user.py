@@ -31,18 +31,6 @@ async def create_persona(persona: PersonalData, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=400, detail="Error creating persona")
 
-@router.get("/personas/", response_model=List[PersonalDataResponse])
-async def get_personas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    personas = db.query(PersonalDataDB).offset(skip).limit(limit).all()
-    return personas
-
-@router.get("/personas/{persona_id}", response_model=PersonalDataResponse)
-async def get_persona(persona_id: int, db: Session = Depends(get_db)):
-    persona = db.query(PersonalDataDB).filter(PersonalDataDB.id == persona_id).first()
-    if persona is None:
-        raise HTTPException(status_code=404, detail="Persona not found")
-    return persona
-
 @router.put("/personas/{persona_id}", response_model=PersonalDataResponse)
 async def update_persona(
     persona_id: int, 

@@ -23,23 +23,18 @@ def is_database_related(question: str) -> bool:
     ]
     question_lower = question.lower()
     
-    # Check if the question contains any database-related keywords
     has_db_keyword = any(keyword in question_lower for keyword in db_keywords)
     
-    # Check if the question is a pure math question (not related to employees)
     math_patterns = [
-        r'\d+\s*[\+\-\*\/]\s*\d+',  # Matches patterns like "2 + 2"
-        r'cuanto es \d+',           # Matches "cuanto es 5"
-        r'cuanto es [^d]*[\+\-\*\/]' # Matches "cuanto es x + y" but not employee data
+        r'\d+\s*[\+\-\*\/]\s*\d+',
+        r'cuanto es \d+',
+        r'cuanto es [^d]*[\+\-\*\/]'
     ]
     
     is_pure_math = any(re.search(pattern, question_lower) for pattern in math_patterns)
     
-    # Special case: questions about sums/totals of employee attributes are valid
     employee_aggregation = ('total' in question_lower or 'suma' in question_lower or 'promedio' in question_lower) and has_db_keyword
     
-    # Return true if it has database keywords and is not a pure math question,
-    # or if it's specifically about aggregating employee data
     return (has_db_keyword and not is_pure_math) or employee_aggregation
 
 
