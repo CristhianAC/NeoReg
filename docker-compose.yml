@@ -64,3 +64,4 @@ services:
 volumes:
   postgres_data:
   vector_data:
+  redis_data:
