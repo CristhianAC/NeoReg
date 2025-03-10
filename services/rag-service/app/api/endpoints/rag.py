@@ -15,28 +15,13 @@ class SQLQueryRequest(BaseModel):
 
 
 def is_database_related(question: str) -> bool:
-    db_keywords = [
-        'empleados', 'personas', 'usuario', 'usuarios', 'genero', 'nombre', 
-        'apellido', 'correo', 'email', 'documento', 'celular', 'fecha', 
-        'nacimiento', 'cuantos', 'cuantas', 'lista', 'buscar', 'encontrar',
-        'masculino', 'femenino', 'no binario', 'edad', 'años', 'promedio'
-    ]
-    question_lower = question.lower()
+ 
     
-    has_db_keyword = any(keyword in question_lower for keyword in db_keywords)
     
-    math_patterns = [
-        r'\d+\s*[\+\-\*\/]\s*\d+',
-        r'cuanto es \d+',
-        r'cuanto es [^d]*[\+\-\*\/]'
-    ]
     
-    is_pure_math = any(re.search(pattern, question_lower) for pattern in math_patterns)
+   
     
-    employee_aggregation = ('total' in question_lower or 'suma' in question_lower or 'promedio' in question_lower) and has_db_keyword
-    
-    return (has_db_keyword and not is_pure_math) or employee_aggregation
-
+    return True
 
 async def process_natural_language_query(query: str, user_data: list) -> str:
     if not is_database_related(query):
@@ -48,6 +33,7 @@ async def process_natural_language_query(query: str, user_data: list) -> str:
     try:
         context = f"""
         Eres un asistente que ayuda a responder preguntas sobre empleados.
+        no puedes responder preguntas que no tengan que ver con la base de datos
         Aquí están los datos de los empleados: {user_data}
         Pregunta: {query}
         Responde en español y de forma concisa.
@@ -167,7 +153,11 @@ async def sql_query_endpoint(request: SQLQueryRequest):
         
         context = f"""
         Eres un asistente que ayuda a responder preguntas sobre empleados.
-        
+        No puedes responder cosas que no tengan que ver con la base de datos.
+        por ejemplo, no puedes responder preguntas sobre el clima. o sobre sumas que no tengan que ver con el tema.
+        recuerda el contexto y es que solo puedes brindar informacion de los trabajadores.
+
+        IMPORTANTE: NO RESPONDAS LAS PREGUNTAS FUERA DEL ANTERIOR CONTEXTO.
         Pregunta: {request.question}
         
         Resultados de la consulta SQL: {query_results}
