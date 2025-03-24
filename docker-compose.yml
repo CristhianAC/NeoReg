@@ -1,4 +1,26 @@
 services:
+  api-gateway:
+    image: traefik:v2.10
+    ports:
+      - "80:80" # HTTP
+      - "8080:8080" # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik-config:/etc/traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--api.dashboard=true"
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.addEntryPointsLabels=true"
+      - "--metrics.prometheus.addServicesLabels=true"
+      - "--providers.file.directory=/etc/traefik"
+      - "--providers.file.watch=true"
+    networks:
+      - neoreg-network
+
   user-service:
     build:
       context: ./services/user-service
@@ -15,6 +37,13 @@ services:
       - POSTGRES_SERVER=db
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.user-service.rule=PathPrefix(`/api/users`)"
+      - "traefik.http.middlewares.user-service-strip.stripprefix.prefixes=/api/users"
+      - "traefik.http.routers.user-service.middlewares=user-service-strip"
+    networks:
+      - neoreg-network
 
   worker-service:
     build:
@@ -32,6 +61,13 @@ services:
       - POSTGRES_SERVER=db
       - POSTGRES_PORT=5432
       - POSTGRES_DB=${POSTGRES_DB}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.worker-service.rule=PathPrefix(`/api/workers`)"
+      - "traefik.http.middlewares.worker-service-strip.stripprefix.prefixes=/api/workers"
+      - "traefik.http.routers.worker-service.middlewares=worker-service-strip"
+    networks:
+      - neoreg-network
 
   rag-service:
     build:
@@ -43,8 +79,14 @@ services:
       - user-service
     environment:
       - USER_SERVICE_URL=http://user-service:8000
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - MODEL_NAME=gpt-3.5-turbo
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rag-service.rule=PathPrefix(`/api/rag`)"
+      - "traefik.http.middlewares.rag-service-strip.stripprefix.prefixes=/api/rag"
+      - "traefik.http.routers.rag-service.middlewares=rag-service-strip"
+    networks:
+      - neoreg-network
 
   db:
     image: postgres:15
@@ -61,7 +103,37 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - neoreg-network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - neoreg-network
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - neoreg-network
+
+networks:
+  neoreg-network:
+    driver: bridge
+
 volumes:
   postgres_data:
   vector_data:
   redis_data:
+  prometheus_data:
+  grafana_data:

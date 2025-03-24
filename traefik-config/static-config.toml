@@ -1,0 +1,25 @@
+[http.services]
+  [http.services.user-service-static.loadBalancer]
+    [[http.services.user-service-static.loadBalancer.servers]]
+      url = "http://user-service:8000"
+  
+  [http.services.worker-service-static.loadBalancer]
+    [[http.services.worker-service-static.loadBalancer.servers]]
+      url = "http://worker-service:8000"
+  
+  [http.services.rag-service-static.loadBalancer]
+    [[http.services.rag-service-static.loadBalancer.servers]]
+      url = "http://rag-service:8000"
+
+[http.routers]
+  [http.routers.user-service-static]
+    rule = "PathPrefix(`/api/users-static`)"
+    service = "user-service-static"
+    
+  [http.routers.worker-service-static]
+    rule = "PathPrefix(`/api/workers-static`)"
+    service = "worker-service-static"
+    
+  [http.routers.rag-service-static]
+    rule = "PathPrefix(`/api/rag-static`)"
+    service = "rag-service-static"
