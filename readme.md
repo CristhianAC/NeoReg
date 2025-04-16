@@ -35,8 +35,6 @@ El sistema está compuesto por los siguientes servicios:
 
 | Método | Endpoint                | Descripción                     |
 | ------ | ----------------------- | ------------------------------- |
-| GET    | `/api/v1/personas/`     | Listar todas las personas       |
-| GET    | `/api/v1/personas/{id}` | Obtener una persona por ID      |
 | POST   | `/api/v1/personas/`     | Crear una nueva persona         |
 | PUT    | `/api/v1/personas/{id}` | Actualizar datos de una persona |
 | DELETE | `/api/v1/personas/{id}` | Eliminar una persona            |
@@ -49,9 +47,6 @@ El sistema está compuesto por los siguientes servicios:
 | ------ | ---------------------- | --------------------------------- |
 | GET    | `/api/v1/workers/`     | Listar todos los trabajadores     |
 | GET    | `/api/v1/workers/{id}` | Obtener un trabajador por ID      |
-| POST   | `/api/v1/workers/`     | Crear un nuevo trabajador         |
-| PUT    | `/api/v1/workers/{id}` | Actualizar datos de un trabajador |
-| DELETE | `/api/v1/workers/{id}` | Eliminar un trabajador            |
 
 ### RAG Service
 
@@ -61,6 +56,33 @@ El sistema está compuesto por los siguientes servicios:
 | ------ | ----------------------- | --------------------------------------------------------- |
 | POST   | `/api/v1/rag/query`     | Realizar consulta de información en lenguaje natural      |
 | POST   | `/api/v1/rag/sql-query` | Convertir pregunta en lenguaje natural a SQL y ejecutarla |
+
+## Monitoreo y Logging
+
+El sistema incluye un sistema de logging integral que captura información detallada de todas las solicitudes y respuestas API.
+
+### Acceso a los logs
+
+Los logs están disponibles a través de los siguientes endpoints:
+
+| Método | Endpoint                       | Descripción                                  |
+| ------ | ------------------------------ | -------------------------------------------- |
+| GET    | `rutaMicroServicio/api/v1/logs`       | Obtener logs con filtros opcionales          |
+| GET    | `rutaMicroServicio/api/v1/logs/stats` | Obtener estadísticas de los logs             |
+| DELETE | `rutaMicroServicio/api/v1/logs/clear` | Limpiar todos los logs (usar con precaución) |
+
+### Filtrado de logs
+
+El endpoint `/api/users/api/v1/logs` acepta los siguientes parámetros de consulta:
+
+- `limit`: Número máximo de logs a devolver (por defecto: 100)
+- `type_filter`: Filtrar por tipo (request, response, error)
+- `path_filter`: Filtrar por ruta de API (coincidencia parcial)
+- `method_filter`: Filtrar por método HTTP (GET, POST, PUT, DELETE)
+- `status_code`: Filtrar por código de estado HTTP
+- `since`: Mostrar logs desde una marca de tiempo ISO o tiempo relativo (ej. '1h', '30m', '1d')
+
+### Ejemplo de uso
 
 ## Ejemplos de uso
 
