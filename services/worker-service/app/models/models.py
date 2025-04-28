@@ -9,7 +9,7 @@ class Gender(str, enum.Enum):
     PREFIERO_NO_REPORTAR = "PREFIERO_NO_REPORTAR"
 
 class DocumentType(str, enum.Enum):
-    TARJETA_DE_IDENTIDAD = "TARJETA_IDENTIDAD"
+    TARJETA_IDENTIDAD = "TARJETA_DE_IDENTIDAD"  
     CEDULA = "CEDULA"
 
 class PersonalDataDB(Base):
