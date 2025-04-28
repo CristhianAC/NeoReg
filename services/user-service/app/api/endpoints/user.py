@@ -6,8 +6,13 @@ from app.models.models import PersonalDataDB
 from app.models.schemas import PersonalData, PersonalDataResponse
 from app.utils.logger import APILogger
 import uuid
+from enum import Enum as PyEnum
 
 router = APIRouter()
+
+class TipoDocumentoDB(str, PyEnum):
+    TARJETA_IDENTIDAD = "TARJETA_DE_IDENTIDAD"
+    CEDULA = "CEDULA"
 
 @router.post("/personas/", response_model=PersonalDataResponse)
 async def create_persona(persona: PersonalData, db: Session = Depends(get_db)):
