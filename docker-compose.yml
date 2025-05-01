@@ -18,13 +18,6 @@ services:
       - "--metrics.prometheus.addServicesLabels=true"
       - "--providers.file.directory=/etc/traefik"
       - "--providers.file.watch=true"
-    labels:
-      # Definir middleware global de CORS
-      - "traefik.http.middlewares.cors-headers.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE,PATCH"
-      - "traefik.http.middlewares.cors-headers.headers.accesscontrolalloworigin=*"
-      - "traefik.http.middlewares.cors-headers.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With"
-      - "traefik.http.middlewares.cors-headers.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.cors-headers.headers.addvaryheader=true"
     networks:
       - neoreg-network
 
@@ -48,8 +41,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.user-service.rule=PathPrefix(`/api/users`)"
       - "traefik.http.middlewares.user-service-strip.stripprefix.prefixes=/api/users"
-      # Aquí agregamos el middleware de CORS a este router
-      - "traefik.http.routers.user-service.middlewares=user-service-strip,cors-headers"
+      - "traefik.http.routers.user-service.middlewares=user-service-strip"
     networks:
       - neoreg-network
 
@@ -73,8 +65,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.worker-service.rule=PathPrefix(`/api/workers`)"
       - "traefik.http.middlewares.worker-service-strip.stripprefix.prefixes=/api/workers"
-      # Aquí agregamos el middleware de CORS a este router
-      - "traefik.http.routers.worker-service.middlewares=worker-service-strip,cors-headers"
+      - "traefik.http.routers.worker-service.middlewares=worker-service-strip"
     networks:
       - neoreg-network
 
@@ -93,8 +84,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.rag-service.rule=PathPrefix(`/api/rag`)"
       - "traefik.http.middlewares.rag-service-strip.stripprefix.prefixes=/api/rag"
-      # Aquí agregamos el middleware de CORS a este router
-      - "traefik.http.routers.rag-service.middlewares=rag-service-strip,cors-headers"
+      - "traefik.http.routers.rag-service.middlewares=rag-service-strip"
     networks:
       - neoreg-network
 

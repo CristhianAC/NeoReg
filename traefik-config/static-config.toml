@@ -11,26 +11,15 @@
     [[http.services.rag-service-static.loadBalancer.servers]]
       url = "http://rag-service:8000"
 
-[http.middlewares]
-  [http.middlewares.cors.headers]
-    accessControlAllowMethods = ["GET", "OPTIONS", "PUT", "POST", "DELETE", "PATCH"]
-    accessControlAllowOriginList = ["*"]
-    accessControlAllowHeaders = ["Content-Type", "Authorization", "X-Requested-With"]
-    accessControlMaxAge = 100
-    addVaryHeader = true
-
 [http.routers]
   [http.routers.user-service-static]
     rule = "PathPrefix(`/api/users-static`)"
     service = "user-service-static"
-    middlewares = ["cors"]
     
   [http.routers.worker-service-static]
     rule = "PathPrefix(`/api/workers-static`)"
     service = "worker-service-static"
-    middlewares = ["cors"]
     
   [http.routers.rag-service-static]
     rule = "PathPrefix(`/api/rag-static`)"
     service = "rag-service-static"
-    middlewares = ["cors"]

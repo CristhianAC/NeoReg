@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.api.endpoints import user, uploadPhoto, sql_executor, logs  # Add the new import
+from fastapi.middleware.cors import CORSMiddleware  # Importar el middleware CORS
+from app.api.endpoints import user, uploadPhoto, sql_executor, logs
 from app.utils.logger import logging_middleware  # Import the middleware
 
 app = FastAPI(
@@ -8,7 +9,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add middleware
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite todos los orígenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos
+    allow_headers=["*"],  # Permite todos los headers
+)
+
+# Add logger middleware
 app.middleware("http")(logging_middleware)
 
 app.include_router(user.router, prefix="/api/v1")
