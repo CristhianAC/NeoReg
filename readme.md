@@ -33,20 +33,45 @@ El sistema está compuesto por los siguientes servicios:
 
 **Base URL**: `http://localhost/api/users/`
 
-| Método | Endpoint                | Descripción                     |
-| ------ | ----------------------- | ------------------------------- |
-| POST   | `/api/v1/personas/`     | Crear una nueva persona         |
-| PUT    | `/api/v1/personas/{id}` | Actualizar datos de una persona |
-| DELETE | `/api/v1/personas/{id}` | Eliminar una persona            |
+| Método | Endpoint                    | Descripción                               |
+| ------ | --------------------------- | ----------------------------------------- |
+| POST   | `/api/v1/personas/`         | Crear una nueva persona                   |
+| PUT    | `/api/v1/personas/{id}`     | Actualizar datos de una persona           |
+| DELETE | `/api/v1/personas/{id}`     | Eliminar una persona                      |
+| POST   | `/api/v1/photos/upload`     | Subir una foto al servidor                |
+| GET    | `/api/v1/photos/{filename}` | Obtener una foto por su nombre de archivo |
+| DELETE | `/api/v1/photos/{filename}` | Eliminar una foto del servidor            |
+
+### Gestión de Fotos
+
+El sistema permite la gestión de imágenes mediante los siguientes endpoints:
+
+#### Subir una foto
+
+```bash
+curl -X POST "http://localhost/api/users/api/v1/photos/upload" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/ruta/a/tu/imagen.jpg"
+```
+
+# Respuesta
+
+{
+"filename": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg",
+"original_filename": "mi_foto.jpg",
+"size": 102400,
+"content_type": "image/jpeg",
+"url": "/api/v1/photos/a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg"
+}
 
 ### Worker Service
 
 **Base URL**: `http://localhost/api/workers/`
 
-| Método | Endpoint               | Descripción                       |
-| ------ | ---------------------- | --------------------------------- |
-| GET    | `/api/v1/workers/`     | Listar todos los trabajadores     |
-| GET    | `/api/v1/workers/{id}` | Obtener un trabajador por ID      |
+| Método | Endpoint               | Descripción                   |
+| ------ | ---------------------- | ----------------------------- |
+| GET    | `/api/v1/workers/`     | Listar todos los trabajadores |
+| GET    | `/api/v1/workers/{id}` | Obtener un trabajador por ID  |
 
 ### RAG Service
 
@@ -65,8 +90,8 @@ El sistema incluye un sistema de logging integral que captura información detal
 
 Los logs están disponibles a través de los siguientes endpoints:
 
-| Método | Endpoint                       | Descripción                                  |
-| ------ | ------------------------------ | -------------------------------------------- |
+| Método | Endpoint                              | Descripción                                  |
+| ------ | ------------------------------------- | -------------------------------------------- |
 | GET    | `rutaMicroServicio/api/v1/logs`       | Obtener logs con filtros opcionales          |
 | GET    | `rutaMicroServicio/api/v1/logs/stats` | Obtener estadísticas de los logs             |
 | DELETE | `rutaMicroServicio/api/v1/logs/clear` | Limpiar todos los logs (usar con precaución) |
