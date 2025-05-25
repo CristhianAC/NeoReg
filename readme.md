@@ -33,23 +33,28 @@ El sistema está compuesto por los siguientes servicios:
 
 **Base URL**: `http://localhost/api/users/`
 
-| Método | Endpoint                    | Descripción                               |
-| ------ | --------------------------- | ----------------------------------------- |
-| POST   | `/api/v1/personas/`         | Crear una nueva persona                   |
-| PUT    | `/api/v1/personas/{id}`     | Actualizar datos de una persona           |
-| DELETE | `/api/v1/personas/{id}`     | Eliminar una persona                      |
-| POST   | `/api/v1/photos/upload`     | Subir una foto al servidor                |
-| GET    | `/api/v1/photos/{filename}` | Obtener una foto por su nombre de archivo |
-| DELETE | `/api/v1/photos/{filename}` | Eliminar una foto del servidor            |
+| Método | Endpoint                                       | Descripción                                      |
+| ------ | ---------------------------------------------- | ------------------------------------------------ |
+| POST   | `/api/v1/personas/`                            | Crear una nueva persona                          |
+| GET    | `/api/v1/personas/`                            | Listar todas las personas                        |
+| GET    | `/api/v1/personas/{id}`                        | Obtener una persona por ID                       |
+| PUT    | `/api/v1/personas/{id}`                        | Actualizar datos de una persona                  |
+| DELETE | `/api/v1/personas/{id}`                        | Eliminar una persona                             |
+| POST   | `/api/v1/photos/upload/{person_id}`            | Subir una foto asociada a una persona específica |
+| GET    | `/api/v1/photos/person/{person_id}`            | Listar todas las fotos de una persona            |
+| GET    | `/api/v1/photos/person/{person_id}/{filename}` | Obtener una foto específica de una persona       |
+| DELETE | `/api/v1/photos/person/{person_id}/{filename}` | Eliminar una foto específica de una persona      |
+| GET    | `/api/v1/photos/{filename}`                    | Obtener una foto por su nombre (compatibilidad)  |
+| DELETE | `/api/v1/photos/{filename}`                    | Eliminar una foto del servidor (compatibilidad)  |
 
 ### Gestión de Fotos
 
-El sistema permite la gestión de imágenes mediante los siguientes endpoints:
+El sistema permite la gestión de imágenes asociadas a personas mediante los siguientes endpoints:
 
-#### Subir una foto
+#### Subir una foto para una persona
 
 ```bash
-curl -X POST "http://localhost/api/users/api/v1/photos/upload" \
+curl -X POST "http://localhost/api/users/api/v1/photos/upload/1" \
   -H "Content-Type: multipart/form-data" \
   -F "file=@/ruta/a/tu/imagen.jpg"
 ```
@@ -57,11 +62,12 @@ curl -X POST "http://localhost/api/users/api/v1/photos/upload" \
 # Respuesta
 
 {
+"person_id": 1,
 "filename": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg",
 "original_filename": "mi_foto.jpg",
 "size": 102400,
 "content_type": "image/jpeg",
-"url": "/api/v1/photos/a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg"
+"url": "/api/v1/photos/person/1/a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg"
 }
 
 ### Worker Service
